@@ -1,0 +1,15 @@
+
+When examining the binary with the `rabin2 -z ./ret2win` command I was able to get the location of the stack parameters I need to pass to call a system command:
+
+    paddr      vaddr      len size section type  string
+8   0x00000943 0x00400943 17  18   .rodata ascii /bin/cat flag.txt
+
+Note:
+0x0000000000400756  ret2win
+
+
+
+The challenge also has the system avaliable in it
+
+
+The challenge was a relitivly simple one to redirect the IP at the return of pwnme. To do this 0x20 bytes were written to fill the char[] buff and then 8 bytes are needed to give the new BP after the return is on the stack. After that, a relitive return address is taken which is 4 bytes.

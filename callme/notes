@@ -1,0 +1,17 @@
+
+
+qnth vaddr      bind   type   lib name
+―――――――――――――――――――――――――――――――――――――
+1   0x004006d0 GLOBAL FUNC       puts
+2   0x004006e0 GLOBAL FUNC       printf
+3   0x004006f0 GLOBAL FUNC       callme_three
+4   0x00400700 GLOBAL FUNC       memset
+5   0x00400710 GLOBAL FUNC       read
+6   0x00000000 GLOBAL FUNC       __libc_start_main
+7   0x00400720 GLOBAL FUNC       callme_one
+8   0x00000000 WEAK   NOTYPE     __gmon_start__
+9   0x00400730 GLOBAL FUNC       setvbuf
+10  0x00400740 GLOBAL FUNC       callme_two
+11  0x00400750 GLOBAL FUNC       exit
+
+
