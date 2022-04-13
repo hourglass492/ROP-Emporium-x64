@@ -52,11 +52,4 @@ pwndbg> ropper -- --search "pop rdi"
 0x00000000004007c3: pop rdi; ret;
 
 
-
-
-
-
-
-
-
-
+So what the exploit will do is place the pointer to the string we want to execute into rdi and then call the system inturupt with the parameter set

