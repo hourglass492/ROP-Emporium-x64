@@ -14,4 +14,15 @@ qnth vaddr      bind   type   lib name
 10  0x00400740 GLOBAL FUNC       callme_two
 11  0x00400750 GLOBAL FUNC       exit
 
+► 0x555555555157 <main+30>    call   called                <called>
+        rdi: 0xcafebabe
+        rsi: 0xd00df00d
+        rdx: 0xdeadbeef
+        rcx: 0x7ffff7f9b718 (__exit_funcs) —▸ 0x7ffff7f9db00 (initial) ◂— 0x0
+
+0x000000000040093c: pop rdi; pop rsi; pop rdx; ret;
+0x00000000004009a3: pop rdi; ret;
+
+
+
 
