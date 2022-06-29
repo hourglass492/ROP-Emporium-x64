@@ -1,0 +1,42 @@
+This is a pretty similar situation to the previous one, however we are no limited on the types of chars we can give it
+
+
+The useful gadget is:
+  0x000000000040069c: pop r12; pop r13; pop r14; pop r15; ret;
+
+We can then use the following to modify the values on the stack(? not sure where we are placing it):
+
+   0x0000000000400628 <+00>:	xor    BYTE PTR [r15],r14b
+   0x000000000040062b <+03>:	ret    
+   0x000000000040062c <+04>:	add    BYTE PTR [r15],r14b
+   0x000000000040062f <+07>:	ret    
+   0x0000000000400630 <+08>:	sub    BYTE PTR [r15],r14b
+   0x0000000000400633 <+11>:	ret    
+   0x0000000000400634 <+12>:	mov    QWORD PTR [r13+0x0],r12
+   0x0000000000400638 <+16>:	ret    
+
+
+
+badchars are: 'x', 'g', 'a', '.'
+
+and the value that we want to write in is:
+  flag.txt
+
+
+So we need to worry about the ag. and the rest should be fine
+
+
+So the idea will be to place a string with stand ins for the ag. in place and then work to modify them.
+
+
+
+Rough exploit
+
+  1. place 4 bytes
+  2. place 4 bytes
+  3, place 4 bytes
+  4. set up modify A and then modify A
+  5. set up modify G and then modify G
+  6. set up modify . and then modify .
+  7. Place the written location into edi (is that the right reg for the first arg?)
+  8. Call the print function
