@@ -1,0 +1,46 @@
+0x0000000000400827: add byte ptr [rcx], al; pop rbp; ret;
+0x00000000004007c5: add byte ptr [rax], r8b; pop rbp; ret;
+
+   0x00000000004009bb <+0>:     pop    rax
+   0x00000000004009bc <+1>:     ret
+   0x00000000004009bd <+2>:     xchg   rsp,rax
+   0x00000000004009bf <+4>:     ret
+   0x00000000004009c0 <+5>:     mov    rax,QWORD PTR [rax]
+   0x00000000004009c3 <+8>:     ret
+   0x00000000004009c4 <+9>:     add    rax,rbp
+   0x00000000004009c7 <+12>:    ret
+
+0x00000000004009bb: pop rax; ret;
+
+8   0x00400720 GLOBAL FUNC       foothold_function
+
+
+Attack
+
+
+pop rax loc
+heap loc for the pivot
+xchg loc
+
+call the foothold function
+
+mov the got value for the foothold into rax
+
+add the correct value to rax
+
+jmp to rax
+
+
+
+Dump of assembler code for function foothold_function@plt:
+   0x0000000000400720 <+0>:     jmp    QWORD PTR [rip+0x20091a]        # 0x601040 <foothold_function@got.plt>
+
+
+Note: I don't have to do anything funcky with strings or args in this. I just have to call the ret2win function
+I just need to redirect it to an offset of     0x0000000000000a81 into the library
+The foothold function is found at an offset of 0x000000000000096a
+
+
+
+
+
