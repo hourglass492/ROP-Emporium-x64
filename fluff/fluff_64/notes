@@ -41,7 +41,7 @@ Ok I think the plan is to just look through the binary and see if I can find the
 
 	Note: XLAB 0x0000000000400628: xlatb; ret; 
 	Set AL to memory byte [RBX + unsigned AL].
-
+null out al
 pop rbx
 location of f in the binary
 bunch of random junk from other pops
@@ -61,3 +61,5 @@ At this point I should have achived an arbitrary write of f to my target locatio
 0x00000000004006a3: pop rdi; ret;
 location of the string
 printfile location
+
+Note: the stosb function does the write as expected but then increments the RDI value
