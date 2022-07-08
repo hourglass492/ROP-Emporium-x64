@@ -35,3 +35,24 @@ qword call address
 
 0xdeadbeefdeadbeef
 ret2win@plt call
+
+
+
+note stdout is file discriptor 2
+
+
+
+0x600e40:       0x0000000d      0x00000000      0x004006b4      0x00000000
+
+pwndbg> disass 0x004006b4
+Dump of assembler code for function _fini:
+   0x00000000004006b4 <+0>:     sub    rsp,0x8
+   0x00000000004006b8 <+4>:     add    rsp,0x8
+   0x00000000004006bc <+8>:     ret
+
+pwndbg> x/gx 0x600e48
+0x600e48:       0x00000000004006b4
+
+
+
+
